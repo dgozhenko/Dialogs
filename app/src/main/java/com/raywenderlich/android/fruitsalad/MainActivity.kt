@@ -39,8 +39,10 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -85,20 +87,27 @@ class MainActivity : AppCompatActivity() {
     val checkedItems = booleanArrayOf(false, false, false)
     MaterialAlertDialogBuilder(this)
       .setTitle(resources.getString(R.string.dialog_add_fruit_title))
-      .setNeutralButton(resources.getString(R.string.dialog_cancel)) {dialog, _ ->
-        dialog.cancel()
-      }
-      .setPositiveButton(resources.getString(R.string.dialog_add_fruit_positive_button)) {dialog, _ ->
-        checkedItems.forEachIndexed { fruitItem, isChecked ->
-          if (isChecked) updateFruitQuantity(fruitItem, true)
-        }
+      .setItems(fruitItems) { dialog, selectedFruitItem ->
+        updateFruitQuantity(selectedFruitItem, true)
         dialog.dismiss()
-      }
-      .setMultiChoiceItems(fruitItems, checkedItems) {_, position, checked ->
-        checkedItems[position] = checked
+        showSnackbar(selectedFruitItem)
       }
       .show()
+    /*.setNeutralButton(resources.getString(R.string.dialog_cancel)) {dialog, _ ->
+    dialog.cancel()
   }
+  .setPositiveButton(resources.getString(R.string.dialog_add_fruit_positive_button)) {dialog, _ ->
+    checkedItems.forEachIndexed { fruitItem, isChecked ->
+      if (isChecked) updateFruitQuantity(fruitItem, true)
+    }
+    dialog.dismiss()
+  }
+  .setMultiChoiceItems(fruitItems, checkedItems) {_, position, checked ->
+    checkedItems[position] = checked
+  }*/
+  }
+
+
 
   private fun showClearListConfirmationDialog() {
     MaterialAlertDialogBuilder(this)
@@ -131,7 +140,12 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun showSnackbar(selectedFruitItem: Int) {
-    // TODO: show snackbar with undo action
+    val snackbarText = getString(R.string.snackbar_fruit_added, fruitItems[selectedFruitItem])
+    Snackbar.make(layout_main, snackbarText, Snackbar.LENGTH_LONG)
+      .setAction(R.string.snackbar_undo) {
+        updateFruitQuantity(selectedFruitItem, false)
+      }
+      .show()
   }
 
   private fun saveToClipboard() {
@@ -142,7 +156,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun showToast() {
-    // TODO: show toast confirmation
+    Toast.makeText(this, R.string.toast_copied_to_clipboard, Toast.LENGTH_LONG).show()
   }
 
   private fun updateFruitQuantity(selectedFruitItem: Int? = null, isIncrease: Boolean) {
