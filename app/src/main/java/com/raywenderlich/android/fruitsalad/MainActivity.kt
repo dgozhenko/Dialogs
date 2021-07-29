@@ -37,6 +37,8 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.activity_main.*
@@ -115,8 +117,17 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun loadSurpriseDialog() {
-    // TODO: show progress indicator
-    // TODO: show dialog with custom view
+    progress.visibility = View.VISIBLE
+    Handler(mainLooper).postDelayed(Runnable {
+      CustomFruitDialog().apply {
+        listener = object : CustomFruitDialog.Listener {
+          override fun onDialogButtonClicked() {
+            dismiss()
+          }
+        }
+      }.show(supportFragmentManager, TAG_FRUIT_DIALOG)
+      progress.visibility = View.GONE
+    }, DELAY)
   }
 
   private fun showSnackbar(selectedFruitItem: Int) {

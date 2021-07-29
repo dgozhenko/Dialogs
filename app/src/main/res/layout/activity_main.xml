@@ -228,6 +228,16 @@
   </com.google.android.material.card.MaterialCardView>
 
   <!-- TODO: add progress bar -->
+  <ProgressBar
+      android:id="@+id/progress"
+      style="@android:style/Widget.Material.Light.ProgressBar.Large.Inverse"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:visibility="gone"
+      app:layout_constraintBottom_toTopOf="@id/button_add"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/card_mystery" />
 
   <com.google.android.material.button.MaterialButton
     android:id="@+id/button_add"

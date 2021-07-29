@@ -33,19 +33,28 @@
  */
 package com.raywenderlich.android.fruitsalad
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
+import java.lang.IllegalStateException
 
 class CustomFruitDialog : DialogFragment() {
 
   var listener: Listener? = null
 
   interface Listener {
-    // TODO: add interface method
+    fun onDialogButtonClicked()
   }
 
-  // TODO: create dialog with custom layout
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-      super.onCreateDialog(savedInstanceState)
+      activity?.let {
+        val inflater = it.layoutInflater
+        AlertDialog.Builder(it)
+          .setView(inflater.inflate(R.layout.dialog_fruit, null))
+          .setPositiveButton(R.string.dialog_fruit_close) {_, _ ->
+            listener?.onDialogButtonClicked()
+          }
+          .create()
+      } ?: throw IllegalStateException("Activity cannot be null")
 }
