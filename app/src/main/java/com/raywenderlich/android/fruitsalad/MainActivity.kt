@@ -80,18 +80,38 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun showAddFruitDialog() {
+    val checkedItems = booleanArrayOf(false, false, false)
     MaterialAlertDialogBuilder(this)
       .setTitle(resources.getString(R.string.dialog_add_fruit_title))
-      .setItems(fruitItems) { dialog, selectedFruitItem ->
-        updateFruitQuantity(selectedFruitItem, true)
+      .setNeutralButton(resources.getString(R.string.dialog_cancel)) {dialog, _ ->
+        dialog.cancel()
+      }
+      .setPositiveButton(resources.getString(R.string.dialog_add_fruit_positive_button)) {dialog, _ ->
+        checkedItems.forEachIndexed { fruitItem, isChecked ->
+          if (isChecked) updateFruitQuantity(fruitItem, true)
+        }
         dialog.dismiss()
-        showSnackbar(selectedFruitItem)
+      }
+      .setMultiChoiceItems(fruitItems, checkedItems) {_, position, checked ->
+        checkedItems[position] = checked
       }
       .show()
   }
 
   private fun showClearListConfirmationDialog() {
-    // TODO: show alert dialog to confirm clear list action
+    MaterialAlertDialogBuilder(this)
+      .setTitle(resources.getString(R.string.dialog_clear_list_title))
+      .setMessage(resources.getString(R.string.dialog_clear_list_message))
+      .setNeutralButton(resources.getString(R.string.dialog_cancel)) {dialog, _ ->
+        dialog.cancel()
+      }
+      .setNegativeButton(resources.getString(R.string.dialog_cancel)) {dialog, _ ->
+        dialog.dismiss()
+      }
+      .setPositiveButton(resources.getString(R.string.dialog_clear_list_positive_button)) {dialog, _ ->
+        updateFruitQuantity(null, false)
+        dialog.dismiss()
+      }
   }
 
   private fun loadSurpriseDialog() {
