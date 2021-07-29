@@ -38,6 +38,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -79,7 +80,14 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun showAddFruitDialog() {
-    // TODO: show simple dialog containing fruit items
+    MaterialAlertDialogBuilder(this)
+      .setTitle(resources.getString(R.string.dialog_add_fruit_title))
+      .setItems(fruitItems) { dialog, selectedFruitItem ->
+        updateFruitQuantity(selectedFruitItem, true)
+        dialog.dismiss()
+        showSnackbar(selectedFruitItem)
+      }
+      .show()
   }
 
   private fun showClearListConfirmationDialog() {
